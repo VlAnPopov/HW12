@@ -1,0 +1,11 @@
+
+module badNamed2 1.0;
+
+require {
+	type etc_t;
+	type named_t;
+	class file { create write open read };
+}
+
+#============= named_t ==============
+allow named_t etc_t:file { create write open read };
