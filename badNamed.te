@@ -1,5 +1,5 @@
 
-module badNamed2 1.0;
+module badNamed 1.0;
 
 require {
 	type etc_t;

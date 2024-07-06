@@ -2,6 +2,29 @@
 - hosts: all # part running on all hosts
   become: true
   tasks:
+  - name: fint all repos
+    find:
+      paths: "/etc/yum.repos.d"
+      patterns: "*.repo"
+    register: repos
+  - name: update repo - mirror
+    ansible.builtin.replace:
+      path: "{{ item.path }}"
+      regexp: mirror.centos.org
+      replace: vault.centos.org
+    with_items: "{{ repos.files }}"
+  - name: update repo - baseurl
+    ansible.builtin.replace:
+      path: "{{ item.path }}"
+      regexp: ^#.*baseurl=http
+      replace: baseurl=http
+    with_items: "{{ repos.files }}"
+  - name: update repo - mirrorlist
+    ansible.builtin.replace:
+      path: "{{ item.path }}"
+      regexp: ^mirrorlist=http
+      replace: "#mirrorlist=http"
+    with_items: "{{ repos.files }}"
   - name: install packages # переведём синтаксис yum из deprecated 
     yum:
       name: "{{ packages }}"
